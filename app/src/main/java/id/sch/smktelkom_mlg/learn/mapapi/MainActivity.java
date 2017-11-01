@@ -16,6 +16,30 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    static final CameraPosition INDONESIA = CameraPosition.builder()
+            .target(new LatLng(-6.175392, 106.827178))
+            .zoom(17)
+            .bearing(295)
+            .tilt(90)
+            .build();
+    static final CameraPosition US = CameraPosition.builder()
+            .target(new LatLng(38.897678, -77.036477))
+            .zoom(16)
+            .bearing(0)
+            .tilt(45)
+            .build();
+    static final CameraPosition AUSTRALIA = CameraPosition.builder()
+            .target(new LatLng(-33.856820, 151.215279))
+            .zoom(16)
+            .bearing(0)
+            .tilt(45)
+            .build();
+    static final CameraPosition FRANCE = CameraPosition.builder()
+            .target(new LatLng(48.858270, 2.294509))
+            .zoom(16)
+            .bearing(0)
+            .tilt(45)
+            .build();
     GoogleMap m_map;
     boolean mapReady = false;
 
@@ -24,30 +48,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button bMap = (Button) findViewById(R.id.bMap);
-        bMap.setOnClickListener(new View.OnClickListener() {
+        Button bAustralia = (Button) findViewById(R.id.bAustalia);
+        bAustralia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mapReady)
-                    m_map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    flyTo(AUSTRALIA);
             }
         });
 
-        Button bSatelite = (Button) findViewById(R.id.bSatelite);
-        bSatelite.setOnClickListener(new View.OnClickListener() {
+        Button bFrance = (Button) findViewById(R.id.bFrance);
+        bFrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mapReady)
-                    m_map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    flyTo(FRANCE);
             }
         });
 
-        Button bHybrid = (Button) findViewById(R.id.bHybrid);
-        bHybrid.setOnClickListener(new View.OnClickListener() {
+        Button bUS = (Button) findViewById(R.id.bUS);
+        bUS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mapReady)
-                    m_map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    flyTo(US);
             }
         });
 
@@ -55,13 +79,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
+    private void flyTo(CameraPosition target) {
+        m_map.animateCamera(CameraUpdateFactory.newCameraPosition(target), 10000, null);
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         mapReady = true;
         m_map = map;
-        LatLng Probolinggo = new LatLng(-7.7543, 113.2159);
-        CameraPosition target = CameraPosition.builder().target(Probolinggo).zoom(14).build();
-        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+        m_map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        flyTo(INDONESIA);
     }
 
     @Override
